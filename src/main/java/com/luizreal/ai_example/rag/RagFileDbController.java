@@ -40,8 +40,9 @@ public class RagFileDbController {
     @GetMapping("/generate")
     public ResponseEntity<String> generate(@RequestParam(value = "message", defaultValue = "Qual o código do status de Bad Request?") String message) throws IOException {
 
-        List<Document> similarDocuments = ragConfiguration.getSimpleVectorStore().similaritySearch(SearchRequest.query(message).withTopK(2));
-        List<String> contentList = similarDocuments.stream().map(Document::getContent).toList();
+        List<Document> similarDocuments = ragConfiguration.getSimpleVectorStore()
+                .similaritySearch(SearchRequest.builder().query(message).topK(2).build());
+        List<String> contentList = similarDocuments.stream().map(Document::getText).toList();
         PromptTemplate promptTemplate = new PromptTemplate(ragPromptTemplate.getContentAsString(StandardCharsets.UTF_8));
         var promptParameters = new HashMap<String,Object>();
         promptParameters.put("input",message);

@@ -13,7 +13,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 @Configuration
@@ -21,7 +25,7 @@ public class RagConfiguration {
 
     private static final Logger log = LoggerFactory.getLogger(RagConfiguration.class);
 
-    @Value("vectorstore.json")
+    @Value("${app.rag.vector-store-file:vectorstore.json}")
     private String vectorStoreName;
 
     @Value("classpath:/rfc7231.txt")
@@ -35,44 +39,63 @@ public class RagConfiguration {
 
     public SimpleVectorStore getSimpleVectorStore() {
 
-        var simpleVectorStore = new SimpleVectorStore(embeddingModel);
+        var simpleVectorStore = SimpleVectorStore.builder(embeddingModel).build();
         var vectorStoreFile = getVectorStoreFile();
         if (vectorStoreFile.exists()) {
 
             log.info("Usando arquivo do Vector Store");
-            simpleVectorStore.load(vectorStoreFile);
+            try {
+                simpleVectorStore.load(vectorStoreFile);
+            } catch (RuntimeException ex) {
+                log.warn("Falha ao carregar Vector Store existente. Recriando arquivo no formato atual. Causa: {}", ex.getMessage());
+                backupInvalidVectorStore(vectorStoreFile);
+                rebuildVectorStore(simpleVectorStore, vectorStoreFile);
+            }
 
         } else {
-
-            long startTime = System.currentTimeMillis();
-
-            log.info("Criando Vector Store, carregando...");
-            var textReader = new TextReader(documentFromTXT);
-            textReader.getCustomMetadata().put("filename", "rfc7231.txt");
-
-            List<Document> documents = textReader.get();
-            log.info("Total de AI Documents: %d".formatted(documents.size()));
-
-            var textSplitter = new TokenTextSplitter();
-            List<Document> splitDocuments = textSplitter.apply(documents);
-            simpleVectorStore.add(splitDocuments);
-
-            log.info("Total de Tokens: %d".formatted(splitDocuments.size()));
-            simpleVectorStore.save(vectorStoreFile);
-
-            long endTime = System.currentTimeMillis();
-            long executionTime = endTime - startTime;
-            log.info("Tempo de execução : " + executionTime + " ms");
-
+            rebuildVectorStore(simpleVectorStore, vectorStoreFile);
         }
         return simpleVectorStore;
     }
 
+    private void rebuildVectorStore(SimpleVectorStore simpleVectorStore, File vectorStoreFile) {
+
+        long startTime = System.currentTimeMillis();
+
+        log.info("Criando Vector Store, carregando...");
+        var textReader = new TextReader(documentFromTXT);
+        textReader.getCustomMetadata().put("filename", "rfc7231.txt");
+
+        List<Document> documents = textReader.get();
+        log.info("Total de AI Documents: %d".formatted(documents.size()));
+
+        var textSplitter = new TokenTextSplitter();
+        List<Document> splitDocuments = textSplitter.apply(documents);
+        simpleVectorStore.add(splitDocuments);
+
+        log.info("Total de Tokens: %d".formatted(splitDocuments.size()));
+        simpleVectorStore.save(vectorStoreFile);
+
+        long endTime = System.currentTimeMillis();
+        long executionTime = endTime - startTime;
+        log.info("Tempo de execução : {} ms", executionTime);
+    }
+
+    private void backupInvalidVectorStore(File vectorStoreFile) {
+        Path source = vectorStoreFile.toPath();
+        Path backup = source.resolveSibling(source.getFileName() + ".bak");
+
+        try {
+            Files.move(source, backup, StandardCopyOption.REPLACE_EXISTING);
+            log.info("Arquivo antigo do Vector Store movido para {}", backup);
+        } catch (IOException ioEx) {
+            log.warn("Não foi possível criar backup do Vector Store antigo. Tentando sobrescrever o arquivo atual.");
+        }
+    }
+
     private File getVectorStoreFile() {
 
-        var path = Paths.get("src", "main", "resources");
-        var absolutePath = path.toFile().getAbsolutePath() + "/" + vectorStoreName;
-        return new File(absolutePath);
+        return Paths.get(vectorStoreName).toFile().getAbsoluteFile();
 
     }
 

@@ -1,7 +1,7 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.3.5'
-    id 'io.spring.dependency-management' version '1.1.6'
+    id 'org.springframework.boot' version '3.5.9'
+    id 'io.spring.dependency-management' version '1.1.7'
 }
 
 group = 'com.luizreal'
@@ -15,21 +15,22 @@ java {
 
 repositories {
     mavenCentral()
-    maven { url 'https://repo.spring.io/milestone' }
 }
 
 ext {
-    set('springAiVersion', "1.0.0-M3")
+    set('springAiVersion', "1.1.4")
+    set('langchain4jVersion', "1.12.2")
 }
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.ai:spring-ai-ollama-spring-boot-starter'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
-    implementation 'dev.langchain4j:langchain4j:0.34.0'
-    implementation 'dev.langchain4j:langchain4j-ollama:0.34.0'
-    implementation 'dev.langchain4j:langchain4j-easy-rag:0.34.0'
-//    implementation 'org.apache.pdfbox:pdfbox:3.0.2'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.ai:spring-ai-starter-model-ollama'
+    implementation 'org.springframework.ai:spring-ai-vector-store'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13'
+    implementation "dev.langchain4j:langchain4j-core:${langchain4jVersion}"
+    implementation "dev.langchain4j:langchain4j:${langchain4jVersion}"
+    implementation "dev.langchain4j:langchain4j-ollama:${langchain4jVersion}"
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }

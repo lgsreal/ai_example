@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat de IA - Exemplo</title>
+    <style>
+        :root {
+            --bg-top: #f7d8b6;
+            --bg-bottom: #c9e4ff;
+            --panel: #ffffff;
+            --ink: #1f2937;
+            --muted: #5b6472;
+            --accent: #166534;
+            --accent-soft: #dcfce7;
+            --border: #d6dbe4;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Segoe UI", "Helvetica Neue", sans-serif;
+            color: var(--ink);
+            background: linear-gradient(150deg, var(--bg-top), var(--bg-bottom));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+
+        .chat-shell {
+            width: min(900px, 100%);
+            height: min(90vh, 760px);
+            background: rgba(255, 255, 255, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(8px);
+            border-radius: 18px;
+            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.18);
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            overflow: hidden;
+        }
+
+        .topbar {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+            background: var(--panel);
+        }
+
+        .title {
+            font-weight: 700;
+            letter-spacing: 0.2px;
+        }
+
+        .session-id {
+            color: var(--muted);
+            font-size: 12px;
+        }
+        .status {
+            color: var(--muted);
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .reset-btn {
+            border: 1px solid var(--border);
+            background: #fff;
+            color: var(--ink);
+            padding: 8px 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .reset-btn:hover {
+            background: #f8fafc;
+        }
+
+        .messages {
+            padding: 18px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0.4));
+        }
+
+        .bubble {
+            max-width: min(80ch, 82%);
+            padding: 10px 12px;
+            border-radius: 12px;
+            line-height: 1.4;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            border: 1px solid var(--border);
+            animation: enter 180ms ease-out;
+        }
+
+        .bubble.user {
+            align-self: flex-end;
+            background: var(--accent);
+            color: #fff;
+            border-color: transparent;
+        }
+
+        .bubble.assistant {
+            align-self: flex-start;
+            background: var(--accent-soft);
+            color: #052e16;
+            border-color: #bbf7d0;
+        }
+
+        .composer {
+            background: var(--panel);
+            border-top: 1px solid var(--border);
+            padding: 12px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 10px;
+        }
+
+        .input {
+            width: 100%;
+            resize: none;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 12px;
+            min-height: 46px;
+            max-height: 160px;
+            font: inherit;
+            color: inherit;
+            outline: none;
+        }
+
+        .input:focus {
+            border-color: #86efac;
+            box-shadow: 0 0 0 3px rgba(134, 239, 172, 0.25);
+        }
+
+        .send-btn {
+            border: none;
+            background: #14532d;
+            color: #fff;
+            padding: 0 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .send-btn:disabled {
+            opacity: 0.7;
+            cursor: default;
+        }
+
+        @keyframes enter {
+            from {
+                transform: translateY(4px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 0;
+            }
+
+            .chat-shell {
+                width: 100%;
+                height: 100vh;
+                border-radius: 0;
+                border: none;
+            }
+
+            .bubble {
+                max-width: 92%;
+            }
+        }
+    </style>
+</head>
+<body>
+<main class="chat-shell">
+    <header class="topbar">
+        <div>
+            <div class="title">Chat com Spring AI</div>
+            <div class="session-id" id="sessionLabel"></div>
+            <div class="status" id="healthLabel">Verificando Ollama...</div>
+        </div>
+        <button id="resetBtn" class="reset-btn" type="button">Nova conversa</button>
+    </header>
+
+    <section id="messages" class="messages"></section>
+
+    <form id="chatForm" class="composer">
+        <textarea id="messageInput" class="input" placeholder="Digite uma mensagem..." required></textarea>
+        <button id="sendBtn" class="send-btn" type="submit">Enviar</button>
+    </form>
+</main>
+
+<script th:inline="javascript">
+    const messagesEl = document.getElementById("messages");
+    const formEl = document.getElementById("chatForm");
+    const inputEl = document.getElementById("messageInput");
+    const sendBtnEl = document.getElementById("sendBtn");
+    const resetBtnEl = document.getElementById("resetBtn");
+    const sessionLabelEl = document.getElementById("sessionLabel");
+    const healthLabelEl = document.getElementById("healthLabel");
+    const REQUEST_TIMEOUT_MS = 50000;
+    const chatUrl = /*[[@{/springai/chat}]]*/ "/springai/chat";
+    const resetUrl = /*[[@{/springai/chat/reset}]]*/ "/springai/chat/reset";
+    const healthUrl = /*[[@{/springai/health}]]*/ "/springai/health";
+
+    let sessionId = localStorage.getItem("chat_session_id") || "";
+
+    renderSessionLabel();
+    checkHealth();
+    appendMessage("assistant", "Olá. Pergunte qualquer coisa. Eu lembro das últimas mensagens desta conversa.");
+
+    formEl.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const message = inputEl.value.trim();
+        if (!message) {
+            return;
+        }
+
+        appendMessage("user", message);
+        inputEl.value = "";
+        inputEl.focus();
+        setSending(true);
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+
+        try {
+            const response = await fetch(chatUrl, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({sessionId, message}),
+                signal: controller.signal
+            });
+
+            const rawBody = await response.text();
+            let data;
+            try {
+                data = JSON.parse(rawBody);
+            } catch {
+                data = {response: rawBody};
+            }
+
+            if (!response.ok) {
+                throw new Error(data.response || ("A requisição falhou com status " + response.status));
+            }
+
+            sessionId = data.sessionId;
+            localStorage.setItem("chat_session_id", sessionId);
+            renderSessionLabel();
+            appendMessage("assistant", data.response || "(resposta vazia)");
+        } catch (error) {
+            if (error.name === "AbortError") {
+                appendMessage("assistant", "Erro: a requisição expirou. O modelo demorou muito para responder.");
+            } else {
+                appendMessage("assistant", "Erro: " + error.message);
+            }
+        } finally {
+            clearTimeout(timeoutId);
+            setSending(false);
+        }
+    });
+
+    resetBtnEl.addEventListener("click", async () => {
+        if (sessionId) {
+            await fetch(resetUrl, {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({sessionId})
+            });
+        }
+
+        sessionId = "";
+        localStorage.removeItem("chat_session_id");
+        renderSessionLabel();
+        messagesEl.innerHTML = "";
+        appendMessage("assistant", "Nova conversa iniciada.");
+        inputEl.focus();
+    });
+
+    function setSending(sending) {
+        sendBtnEl.disabled = sending;
+        sendBtnEl.textContent = sending ? "..." : "Enviar";
+    }
+
+    function renderSessionLabel() {
+        if (!sessionId) {
+            sessionLabelEl.textContent = "Sessão: nova";
+            return;
+        }
+        sessionLabelEl.textContent = "Sessão: " + sessionId.slice(0, 8);
+    }
+
+    function appendMessage(role, text) {
+        const bubble = document.createElement("article");
+        bubble.className = "bubble " + role;
+        bubble.textContent = text;
+        messagesEl.appendChild(bubble);
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+    }
+
+    async function checkHealth() {
+        try {
+            const response = await fetch(healthUrl);
+            const data = await response.json();
+            if (data.reachable) {
+                healthLabelEl.textContent = "Ollama: conectado (" + data.baseUrl + ", modelo: " + data.model + ")";
+            } else {
+                healthLabelEl.textContent = "Ollama: desconectado (" + (data.error || "erro desconhecido") + ")";
+            }
+        } catch (error) {
+            healthLabelEl.textContent = "Ollama: desconectado (" + error.message + ")";
+        }
+    }
+</script>
+</body>
+</html>

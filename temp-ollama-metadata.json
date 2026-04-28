@@ -1,0 +1,394 @@
+{
+  "groups": [
+    {
+      "name": "spring.ai.ollama",
+      "type": "org.springframework.ai.model.ollama.autoconfigure.OllamaConnectionProperties",
+      "sourceType": "org.springframework.ai.model.ollama.autoconfigure.OllamaConnectionProperties"
+    },
+    {
+      "name": "spring.ai.ollama.chat",
+      "type": "org.springframework.ai.model.ollama.autoconfigure.OllamaChatProperties",
+      "sourceType": "org.springframework.ai.model.ollama.autoconfigure.OllamaChatProperties"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options",
+      "type": "org.springframework.ai.ollama.api.OllamaChatOptions",
+      "sourceType": "org.springframework.ai.model.ollama.autoconfigure.OllamaChatProperties",
+      "sourceMethod": "getOptions()"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.format",
+      "type": "java.lang.Object",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions",
+      "sourceMethod": "getFormat()"
+    },
+    {
+      "name": "spring.ai.ollama.embedding",
+      "type": "org.springframework.ai.model.ollama.autoconfigure.OllamaEmbeddingProperties",
+      "sourceType": "org.springframework.ai.model.ollama.autoconfigure.OllamaEmbeddingProperties"
+    },
+    {
+      "name": "spring.ai.ollama.embedding.options",
+      "type": "org.springframework.ai.ollama.api.OllamaEmbeddingOptions",
+      "sourceType": "org.springframework.ai.model.ollama.autoconfigure.OllamaEmbeddingProperties",
+      "sourceMethod": "getOptions()"
+    },
+    {
+      "name": "spring.ai.ollama.init",
+      "type": "org.springframework.ai.model.ollama.autoconfigure.OllamaInitializationProperties",
+      "sourceType": "org.springframework.ai.model.ollama.autoconfigure.OllamaInitializationProperties"
+    },
+    {
+      "name": "spring.ai.ollama.init.chat",
+      "type": "org.springframework.ai.model.ollama.autoconfigure.OllamaInitializationProperties$ModelTypeInit",
+      "sourceType": "org.springframework.ai.model.ollama.autoconfigure.OllamaInitializationProperties",
+      "sourceMethod": "getChat()"
+    },
+    {
+      "name": "spring.ai.ollama.init.embedding",
+      "type": "org.springframework.ai.model.ollama.autoconfigure.OllamaInitializationProperties$ModelTypeInit",
+      "sourceType": "org.springframework.ai.model.ollama.autoconfigure.OllamaInitializationProperties",
+      "sourceMethod": "getEmbedding()"
+    }
+  ],
+  "properties": [
+    {
+      "name": "spring.ai.ollama.base-url",
+      "type": "java.lang.String",
+      "description": "Base URL where Ollama API server is running.",
+      "sourceType": "org.springframework.ai.model.ollama.autoconfigure.OllamaConnectionProperties",
+      "defaultValue": "http:\/\/localhost:11434"
+    },
+    {
+      "name": "spring.ai.ollama.chat.model",
+      "type": "java.lang.String",
+      "sourceType": "org.springframework.ai.model.ollama.autoconfigure.OllamaChatProperties"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.f16-k-v",
+      "type": "java.lang.Boolean",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.frequency-penalty",
+      "type": "java.lang.Double",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.internal-tool-execution-enabled",
+      "type": "java.lang.Boolean",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.keep-alive",
+      "type": "java.lang.String",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.logits-all",
+      "type": "java.lang.Boolean",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.low-v-r-a-m",
+      "type": "java.lang.Boolean",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.main-g-p-u",
+      "type": "java.lang.Integer",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.max-tokens",
+      "type": "java.lang.Integer",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.min-p",
+      "type": "java.lang.Double",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.mirostat",
+      "type": "java.lang.Integer",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.mirostat-eta",
+      "type": "java.lang.Float",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.mirostat-tau",
+      "type": "java.lang.Float",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.model",
+      "type": "java.lang.String",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.num-batch",
+      "type": "java.lang.Integer",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.num-ctx",
+      "type": "java.lang.Integer",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.num-g-p-u",
+      "type": "java.lang.Integer",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.num-keep",
+      "type": "java.lang.Integer",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.num-predict",
+      "type": "java.lang.Integer",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.num-thread",
+      "type": "java.lang.Integer",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.output-schema",
+      "type": "java.lang.String",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.penalize-newline",
+      "type": "java.lang.Boolean",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.presence-penalty",
+      "type": "java.lang.Double",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.repeat-last-n",
+      "type": "java.lang.Integer",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.repeat-penalty",
+      "type": "java.lang.Double",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.seed",
+      "type": "java.lang.Integer",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.stop",
+      "type": "java.util.List<java.lang.String>",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.stop-sequences",
+      "type": "java.util.List<java.lang.String>",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.temperature",
+      "type": "java.lang.Double",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.tfs-z",
+      "type": "java.lang.Float",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.think-option",
+      "type": "org.springframework.ai.ollama.api.ThinkOption",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.tool-callbacks",
+      "type": "java.util.List<org.springframework.ai.tool.ToolCallback>",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.tool-context",
+      "type": "java.util.Map<java.lang.String,java.lang.Object>",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.tool-names",
+      "type": "java.util.Set<java.lang.String>",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.top-k",
+      "type": "java.lang.Integer",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.top-p",
+      "type": "java.lang.Double",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.truncate",
+      "type": "java.lang.Boolean",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.typical-p",
+      "type": "java.lang.Float",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.use-m-lock",
+      "type": "java.lang.Boolean",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.use-m-map",
+      "type": "java.lang.Boolean",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.use-n-u-m-a",
+      "type": "java.lang.Boolean",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.chat.options.vocab-only",
+      "type": "java.lang.Boolean",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaChatOptions"
+    },
+    {
+      "name": "spring.ai.ollama.embedding.model",
+      "type": "java.lang.String",
+      "sourceType": "org.springframework.ai.model.ollama.autoconfigure.OllamaEmbeddingProperties"
+    },
+    {
+      "name": "spring.ai.ollama.embedding.options.dimensions",
+      "type": "java.lang.Integer",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaEmbeddingOptions"
+    },
+    {
+      "name": "spring.ai.ollama.embedding.options.keep-alive",
+      "type": "java.lang.String",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaEmbeddingOptions"
+    },
+    {
+      "name": "spring.ai.ollama.embedding.options.low-v-r-a-m",
+      "type": "java.lang.Boolean",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaEmbeddingOptions"
+    },
+    {
+      "name": "spring.ai.ollama.embedding.options.main-g-p-u",
+      "type": "java.lang.Integer",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaEmbeddingOptions"
+    },
+    {
+      "name": "spring.ai.ollama.embedding.options.model",
+      "type": "java.lang.String",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaEmbeddingOptions"
+    },
+    {
+      "name": "spring.ai.ollama.embedding.options.num-batch",
+      "type": "java.lang.Integer",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaEmbeddingOptions"
+    },
+    {
+      "name": "spring.ai.ollama.embedding.options.num-g-p-u",
+      "type": "java.lang.Integer",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaEmbeddingOptions"
+    },
+    {
+      "name": "spring.ai.ollama.embedding.options.num-thread",
+      "type": "java.lang.Integer",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaEmbeddingOptions"
+    },
+    {
+      "name": "spring.ai.ollama.embedding.options.truncate",
+      "type": "java.lang.Boolean",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaEmbeddingOptions"
+    },
+    {
+      "name": "spring.ai.ollama.embedding.options.use-m-lock",
+      "type": "java.lang.Boolean",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaEmbeddingOptions"
+    },
+    {
+      "name": "spring.ai.ollama.embedding.options.use-m-map",
+      "type": "java.lang.Boolean",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaEmbeddingOptions"
+    },
+    {
+      "name": "spring.ai.ollama.embedding.options.use-n-u-m-a",
+      "type": "java.lang.Boolean",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaEmbeddingOptions"
+    },
+    {
+      "name": "spring.ai.ollama.embedding.options.vocab-only",
+      "type": "java.lang.Boolean",
+      "sourceType": "org.springframework.ai.ollama.api.OllamaEmbeddingOptions"
+    },
+    {
+      "name": "spring.ai.ollama.init.chat.additional-models",
+      "type": "java.util.List<java.lang.String>",
+      "description": "Additional models to initialize besides the ones configured via default properties.",
+      "sourceType": "org.springframework.ai.model.ollama.autoconfigure.OllamaInitializationProperties$ModelTypeInit"
+    },
+    {
+      "name": "spring.ai.ollama.init.chat.include",
+      "type": "java.lang.Boolean",
+      "description": "Include this type of models in the initialization task.",
+      "sourceType": "org.springframework.ai.model.ollama.autoconfigure.OllamaInitializationProperties$ModelTypeInit",
+      "defaultValue": true
+    },
+    {
+      "name": "spring.ai.ollama.init.embedding.additional-models",
+      "type": "java.util.List<java.lang.String>",
+      "description": "Additional models to initialize besides the ones configured via default properties.",
+      "sourceType": "org.springframework.ai.model.ollama.autoconfigure.OllamaInitializationProperties$ModelTypeInit"
+    },
+    {
+      "name": "spring.ai.ollama.init.embedding.include",
+      "type": "java.lang.Boolean",
+      "description": "Include this type of models in the initialization task.",
+      "sourceType": "org.springframework.ai.model.ollama.autoconfigure.OllamaInitializationProperties$ModelTypeInit",
+      "defaultValue": true
+    },
+    {
+      "name": "spring.ai.ollama.init.max-retries",
+      "type": "java.lang.Integer",
+      "description": "Maximum number of retries for the model pull operation.",
+      "sourceType": "org.springframework.ai.model.ollama.autoconfigure.OllamaInitializationProperties",
+      "defaultValue": 0
+    },
+    {
+      "name": "spring.ai.ollama.init.pull-model-strategy",
+      "type": "org.springframework.ai.ollama.management.PullModelStrategy",
+      "description": "Whether to pull models at startup-time and how.",
+      "sourceType": "org.springframework.ai.model.ollama.autoconfigure.OllamaInitializationProperties",
+      "defaultValue": "never"
+    },
+    {
+      "name": "spring.ai.ollama.init.timeout",
+      "type": "java.time.Duration",
+      "description": "How long to wait for a model to be pulled.",
+      "sourceType": "org.springframework.ai.model.ollama.autoconfigure.OllamaInitializationProperties",
+      "defaultValue": "5m"
+    }
+  ],
+  "hints": [],
+  "ignored": {
+    "properties": []
+  }
+}
